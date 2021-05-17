@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action | blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action" />
+<meta name="author" content="theanzy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Getting Started We need to have a few things ready before we start:" />
+<meta property="og:description" content="Getting Started We need to have a few things ready before we start:" />
+<link rel="canonical" href="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html" />
+<meta property="og:url" content="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html" />
+<meta property="og:site_name" content="blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-13T16:08:30+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action" />
+<script type="application/ld+json">
+{"datePublished":"2021-05-13T16:08:30+00:00","author":{"@type":"Person","name":"theanzy"},"dateModified":"2021-05-17T00:24:08+00:00","description":"Getting Started We need to have a few things ready before we start:","mainEntityOfPage":{"@type":"WebPage","@id":"https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html"},"url":"https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html","@type":"BlogPosting","headline":"Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://theanzy.github.io/blog/feed.xml" title="blog" /><meta name="google-site-verification" content="ieYpDQldOarPbbjO-EaIsAWNOX_ImFBev-n2kYqB65c" />
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About</a></div>
+      </nav></div>
+
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-05-13T16:08:30+00:00" itemprop="datePublished">
+        Updated on May 17, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="getting-started">Getting Started</h2>
+<p>We need to have a few things ready before we start:</p>
+
+<ol>
+  <li>Visual Studio 2019
+    <ul>
+      <li>I am using the <a href="https://visualstudio.microsoft.com/downloads/">Community edition</a> of Visual Studio 2019.</li>
+    </ul>
+  </li>
+  <li>
+    <p>PostgreSQL</p>
+  </li>
+  <li>
+    <p>Install docker by following the <a href="https://docs.docker.com/get-docker/">steps here</a></p>
+  </li>
+  <li>
+    <p>Create a new account in <a href="https://signup.Heroku.com/">Heroku</a></p>
+  </li>
+  <li>
+    <p><a href="https://devcenter.Heroku.com/articles/Heroku-cli">Install Heroku cli</a></p>
+  </li>
+  <li>A GitHub repository for the project that we want to deploy</li>
+</ol>
+
+<h2 id="setup-a-net-core-mvc-project-with-postgresql">Setup a .NET Core MVC Project with PostgreSQL</h2>
+
+<ol>
+  <li>
+    <p>Create a new project using ‘ASP.NET Core Web Application’ template</p>
+
+    <p>Follow the steps <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-5.0&amp;tabs=visual-studio">here</a> to setup the project for .NET Core 5.0</p>
+
+    <p>We will use Model-View-Controller. Follow the steps in <a href="https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro?view=aspnetcore-5.0">Tutorial: Get started with EF Core in an ASP.NET MVC web app</a> to get started.</p>
+
+    <p>After setting up the MVC project in Visual Studio, run the app to make sure it is working.</p>
+  </li>
+  <li>
+    <p>We will setup a PostgreSQL database with Entity Framework Core for our web app.
+This step uses a local database. I will discuss how to get the app to work with PostgreSQL in Heroku later in this post.</p>
+
+    <p>I followed the steps from <a href="https://medium.com/@RobertKhou/getting-started-with-entity-framework-core-PostgreSQL-c6fa09681624">Getting Started with Entity Framework Core (PostgreSQL)</a>.</p>
+
+    <p>In pgAdmin, create a new database and a new table.</p>
+
+    <p>In Visual Studio, install the following packages with Nuget package manager:</p>
+    <ol>
+      <li>
+        <p>Npgsql</p>
+      </li>
+      <li>
+        <p>Npgsql.EntityFrameworkCore.PostgreSQL</p>
+      </li>
+      <li>
+        <p>Microsoft.EntityFrameworkCore.Design</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>Once we have a database and table, we will convert it to Models in C#.</p>
+
+    <p>In same directory as your project file, convert the database in PostgreSQL to Models.</p>
+
+    <p>Replace the fields in the following snippet with your own credentials.</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> dotnet ef dbcontext scaffold <span class="s2">"Host=localhost;Database=demo</span><span class="se">\_</span><span class="s2">db;Username=demo</span><span class="se">\_</span><span class="s2">user;Password=demo</span><span class="se">\_</span><span class="s2">password"</span> Npgsql.EntityFrameworkCore.PostgreSQL <span class="nt">-o</span> Models
+</code></pre></div>    </div>
+
+    <p><a href="https://stackoverflow.com/questions/57066856/dotnet-ef-not-found-in-net-core-3">Install dotnet ef tool separately</a>. If dotnet ef is not installed.</p>
+  </li>
+  <li>After that, you should have two classes generated in the project:
+    <ul>
+      <li>Model class.</li>
+      <li>Context Class.
+        <ul>
+          <li>This class is used to perform CRUD operations to our database.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Display the database items in your web page.</p>
+
+    <p>I am creating a new view in a new <code class="language-plaintext highlighter-rouge">Demo()</code> method in the <code class="language-plaintext highlighter-rouge">HomeController</code>.</p>
+
+    <p>You can choose to create create a new controller and a new view.</p>
+
+    <p>In the <code class="language-plaintext highlighter-rouge">Demo()</code> method, add a new Razor View.</p>
+    <ul>
+      <li>
+        <p>Use the list template, and select your model class.</p>
+      </li>
+      <li>
+        <p>The following snippet is my <code class="language-plaintext highlighter-rouge">Demo()</code> controller method in <code class="language-plaintext highlighter-rouge">HomeController.cs</code></p>
+      </li>
+    </ul>
+
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">ActionResult</span><span class="p">&gt;</span> <span class="nf">Demo</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">DemoItem</span><span class="p">&gt;</span> <span class="n">items</span> <span class="p">=</span> <span class="k">from</span> <span class="n">item</span> <span class="k">in</span> <span class="n">context</span><span class="p">.</span><span class="n">DemoItem</span> 
+    <span class="k">orderby</span> <span class="n">item</span><span class="p">.</span><span class="n">Id</span> <span class="k">select</span> <span class="n">item</span><span class="p">;</span>
+    <span class="n">List</span><span class="p">&lt;</span><span class="n">DemoItem</span><span class="p">&gt;</span> <span class="n">result</span> <span class="p">=</span> <span class="k">await</span> <span class="n">items</span><span class="p">.</span><span class="nf">ToListAsync</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nf">View</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+
+    <p>You should now have a new view generated in the Home folder under <code class="language-plaintext highlighter-rouge">Views/</code> folder</p>
+  </li>
+  <li>
+    <p>Build and run your app locally to see the result. I use the following link to view my page.</p>
+
+    <ul>
+      <li>
+        <p><a href="https://localhost:44379/Home/Demo">https://localhost:44379/Home/Demo</a></p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Home</code> is for <code class="language-plaintext highlighter-rouge">HomeController</code></p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Demo</code> is my <code class="language-plaintext highlighter-rouge">Demo()</code> method in <code class="language-plaintext highlighter-rouge">HomeController</code></p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>You should see a list view similar to (Picture From: <a href="https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/creating-an-entity-framework-data-model-for-an-asp-net-mvc-application">Microsoft docs</a>)</li>
+</ol>
+
+<p><img src="/blog/images/post/may21/mvc-list-view.png" alt="_config.yml" /></p>
+
+<h2 id="setup-docker">Setup Docker</h2>
+<ol>
+  <li>Create a Dockerfile project folder. The following is the a snippet of my Dockerfile.
+    <div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build-env</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">COPY</span><span class="s"> DemoMVCApp.csproj ./</span>
+
+<span class="k">RUN </span>dotnet restore
+
+<span class="k">COPY</span><span class="s"> . .</span>
+
+<span class="k">RUN </span>dotnet publish <span class="nt">-c</span> Release <span class="nt">-o</span> out
+
+<span class="k">FROM</span><span class="s"> mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">COPY</span><span class="s"> --from=build-env /app/out .</span>
+
+<span class="k">CMD</span><span class="s"> ASPNETCORE\_URLS=http://\*:$PORT dotnet DemoMVCApp.dll</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The Dockerfile will do the following steps:</p>
+
+    <p>Download .NET core 5.0 sdk to build the project.</p>
+
+    <p>Download all required Nuget packages and copy all required files to <code class="language-plaintext highlighter-rouge">/app</code> folder.</p>
+
+    <p>Compiles the project and gives a <code class="language-plaintext highlighter-rouge">{project-name}.dll</code> file</p>
+
+    <pre><code class="language-Docker"> RUN dotnet publish -c Release -o out
+</code></pre>
+
+    <p>Download .NET core runtime to run the web app.</p>
+
+    <p>We will have to supply <code class="language-plaintext highlighter-rouge">ASPNETCORE_URLS</code> variable for it to be run on Heroku.</p>
+  </li>
+  <li>The web app needs to be using the port number provided in Heroku. In <code class="language-plaintext highlighter-rouge">Program.cs</code> modify your <code class="language-plaintext highlighter-rouge">CreateHostBuilder()</code> method simillar to the following.
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">public</span> <span class="k">static</span> <span class="n">IHostBuilder</span> <span class="nf">CreateHostBuilder</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">);</span>
+
+ <span class="n">Host</span><span class="p">.</span><span class="nf">CreateDefaultBuilder</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+ <span class="p">.</span><span class="nf">ConfigureWebHostDefaults</span><span class="p">(</span><span class="n">webBuilder</span> <span class="p">=&gt;</span>
+ <span class="p">{</span>
+
+     <span class="kt">var</span> <span class="n">port</span> <span class="p">=</span> <span class="n">Environment</span><span class="p">.</span><span class="nf">GetEnvironmentVariable</span><span class="p">(</span><span class="s">"PORT"</span><span class="p">);</span>
+
+     <span class="n">webBuilder</span><span class="p">.</span><span class="nf">UseUrls</span><span class="p">(</span><span class="s">$"http://+:</span><span class="p">{</span><span class="n">port</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+     <span class="n">webBuilder</span><span class="p">.</span><span class="n">UseStartup</span><span class="p">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">Startup</span><span class="p">&amp;</span><span class="n">gt</span><span class="p">;();</span>
+
+ <span class="p">});</span>
+</code></pre></div>    </div>
+    <p>This will get the <code class="language-plaintext highlighter-rouge">ASPNETCORE_URLS</code> variable passed in from the Dockerfile</p>
+
+    <p>We will need to change the listening port for the app. Otherwise, the web app will not start properly in Heroku because Heroku will use a different port than the usual port 5000 and 5001. See <a href="https://habr.com/en/post/450904/">Practicalities of deploying dockerized ASP.NET Core application to Heroku</a>.</p>
+  </li>
+  <li>
+    <p>In the project’s directory, build the Dockerfile and make sure the it builds successfully.</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">docker build -t {your-app-name} .</code></li>
+    </ul>
+
+    <p>We will deploy this image to the Heroku registy in the next steps.</p>
+  </li>
+</ol>
+
+<h2 id="configure-a-new-heroku-app">Configure a new Heroku app</h2>
+
+<ol>
+  <li>
+    <p>Create a new Heroku app in Heroku website.</p>
+
+    <p>After you have create a Heroku account, you will be able to create a new app in the dashboard.</p>
+
+    <p>Your web app will be accessed through <a href="">https://{your-app-name}.Herokuapp.com</a>, after the your have deployed the app.</p>
+
+    <p>Your app name should be the same as your Docker image name.</p>
+  </li>
+  <li>
+    <p>Install PostgreSQL and create a table in Heroku.</p>
+
+    <p>I followed the steps in <a href="https://medium.com/@vapurrmaid/getting-started-with-Heroku-postgres-and-pgadmin-run-on-part-2-90d9499ed8fb">Getting Started with Heroku, PostgreSQL and PgAdmin by @vapurrmaid</a> to setup a PostgreSQL database on Heroku and use it with my project.</p>
+
+    <p>Setup the Heroku database table in pgAdmin, so that its contents will be the same as the one in your local database.</p>
+  </li>
+  <li>
+    <p>Now, you can change your database’s connection string in your project to see if the web app works.</p>
+
+    <p>Remember to change the connection string back when you are deploying to GitHub.</p>
+  </li>
+  <li>
+    <p>In a command prompt, login to Heroku cli.</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Heroku login
+Heroku container:login
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Configure Heroku to use containers</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Heroku stack:set container
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="use-github-actions-to-deploy-the-app-to-heroku">Use GitHub Actions to deploy the app to Heroku</h2>
+
+<ol>
+  <li>
+    <p>In your GitHub repository, add three GitHub Secrets.</p>
+
+    <p>We will use these values in GitHub actions workflow.</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Heroku_APP_NAME</code>
+        <ul>
+          <li>Name of your application</li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">DATABASE_URL</code>
+        <ul>
+          <li>Find this value is in your Heroku app -&gt; Settings -&gt; Config Vars</li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">Heroku_API_KEY</code>
+        <ul>
+          <li>Either reveal an existing api key or generate a new one in <a href="https://dashboard.Heroku.com/account">Heroku Account page</a>.
+<br /><br /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Add a new GitHub workflow on the Github Actions tab in your GitHub repository. This will build and deploy the dockerized web app to Heroku whenever you push something new to GitHub.</p>
+
+    <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">deploy-Heroku</span>
+
+<span class="na">on</span><span class="pi">:</span>
+    <span class="na">push</span><span class="pi">:</span>
+        <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">master</span> <span class="pi">]</span>
+    <span class="na">pull_request</span><span class="pi">:</span>
+        <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span> <span class="nv">master</span> <span class="pi">]</span>
+    <span class="na">workflow_dispatch</span><span class="pi">:</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span>
+        <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+        <span class="na">steps</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build and deploy the Docker image</span>
+            <span class="s">env</span><span class="pi">:</span>
+            <span class="na">Heroku_API_KEY</span><span class="pi">:</span> <span class="s">$</span>
+            <span class="na">APP_NAME</span><span class="pi">:</span> <span class="s">$</span>
+            <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+            <span class="s">docker login --username=_ --password=$Heroku_API_KEY registry.Heroku.com</span>
+            <span class="s">Heroku container:push web -a $APP_NAME</span>
+            <span class="s">Heroku container:release web -a $APP_NAME</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Configure Heroku connection string.</p>
+
+    <p>Right now, if we deployed the dockerized web app, it will not connect to the Heroku database.</p>
+
+    <p>We had supplied the enviroment variables in Dockerfile, now we need to modify the web app so that it will take in the variables in Heroku.</p>
+
+    <p>Modify <code class="language-plaintext highlighter-rouge">ConfigureServices()</code> in <code class="language-plaintext highlighter-rouge">Startup.cs</code> to use Heroku’s connection string when the web app is not running in development enviroment.</p>
+
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">services</span><span class="p">.</span><span class="nf">AddControllersWithViews</span><span class="p">();</span>
+
+    <span class="kt">var</span> <span class="n">IsDevelopment</span> <span class="p">=</span> <span class="n">Environment</span><span class="p">.</span><span class="nf">GetEnvironmentVariable</span><span class="p">(</span><span class="s">"ASPNETCORE_ENVIRONMENT"</span><span class="p">)</span> <span class="p">==</span> <span class="s">"Development"</span><span class="p">;</span>
+
+    <span class="kt">var</span> <span class="n">connectionString</span> <span class="p">=</span> <span class="n">IsDevelopment</span> <span class="p">?</span> <span class="n">Configuration</span><span class="p">.</span><span class="nf">GetConnectionString</span><span class="p">(</span><span class="s">"DefaultConnection"</span><span class="p">)</span> <span class="p">:</span> <span class="nf">GetHerokuConnectionString</span><span class="p">();</span>
+
+    <span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="p">&lt;</span><span class="n">TodoContext</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span> <span class="n">options</span><span class="p">.</span><span class="nf">UseNpgsql</span><span class="p">(</span><span class="n">connectionString</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+
+    <p>Add in the <code class="language-plaintext highlighter-rouge">GetHeroConnectionString()</code> method. When the web app is deployed in Heroku, this <code class="language-plaintext highlighter-rouge">ConfigureServices()</code> will use the this method to convert the <code class="language-plaintext highlighter-rouge">DATABASE_URL</code> variable from Heroku to the connection string that is expected by the .NET Core web app.</p>
+
+    <p>I modified the <code class="language-plaintext highlighter-rouge">GetHeroConnectionString()</code> function that I copied from this <a href="https://medium.com/@vapurrmaid/getting-started-with-Heroku-postgres-and-pgadmin-run-on-part-2-90d9499ed8fb">post by @n1ghtmare</a>.</p>
+
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">GetHerokuConnectionString</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">string</span> <span class="n">connectionUrl</span> <span class="p">=</span> <span class="n">Environment</span><span class="p">.</span><span class="nf">GetEnvironmentVariable</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">);</span>
+
+    <span class="kt">var</span> <span class="n">databaseUri</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="n">connectionUrl</span><span class="p">);</span>
+
+    <span class="kt">string</span> <span class="n">db</span> <span class="p">=</span> <span class="n">databaseUri</span><span class="p">.</span><span class="n">LocalPath</span><span class="p">.</span><span class="nf">TrimStart</span><span class="p">(</span><span class="sc">'/'</span><span class="p">);</span>
+    <span class="kt">string</span><span class="p">[]</span> <span class="n">userInfo</span> <span class="p">=</span> <span class="n">databaseUri</span><span class="p">.</span><span class="n">UserInfo</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="sc">':'</span><span class="p">,</span> <span class="n">StringSplitOptions</span><span class="p">.</span><span class="n">RemoveEmptyEntries</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="s">$"User ID=</span><span class="p">{</span><span class="n">userInfo</span><span class="p">[</span><span class="m">0</span><span class="p">]}</span><span class="s">;Password=</span><span class="p">{</span><span class="n">userInfo</span><span class="p">[</span><span class="m">1</span><span class="p">]}</span><span class="s">;Host=</span><span class="p">{</span><span class="n">databaseUri</span><span class="p">.</span><span class="n">Host</span><span class="p">}</span><span class="s">;Port=</span><span class="p">{</span><span class="n">databaseUri</span><span class="p">.</span><span class="n">Port</span><span class="p">}</span><span class="s">;Database=</span><span class="p">{</span><span class="n">db</span><span class="p">}</span><span class="s">;Pooling=true;SSL Mode=Require;Trust Server Certificate=True;"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Push to your GitHub repo, and the website is now live on <a href="">https://{your-app-name}.herokuapp.com</a>.</p>
+  </li>
+  <li>
+    <p>Make sure the web app also runs locally wih local PostgreSQL database.</p>
+  </li>
+</ol>
+
+  </div>
+
+  <a class="u-url" href="/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html" hidden></a>
+</article><div id="disqus_thread"></div>
+<script>
+
+    var disqus_config = function () {
+    this.page.url = 'https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html';
+    this.page.identifier = 'https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://theanzy-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading"><a class="author-link" href="https://theanzy.github.io">theanzy</a></h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">C# .NET</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/theanzy"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg> <span class="username">theanzy</span></a></li><li><a href="https://www.twitter.com/theanzy"><svg class="svg-icon"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">theanzy</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>This page is created with Jekyll</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
