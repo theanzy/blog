@@ -1,8 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://theanzy.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://theanzy.github.io/blog/" rel="alternate" type="text/html" /><updated>2021-05-17T00:34:39+00:00</updated><id>https://theanzy.github.io/blog/feed.xml</id><title type="html">blog</title><subtitle>This page is created with Jekyll</subtitle><author><name>theanzy</name></author><entry><title type="html">Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action</title><link href="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html" rel="alternate" type="text/html" title="Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action" /><published>2021-05-13T16:08:30+00:00</published><updated>2021-05-17T00:24:08+00:00</updated><id>https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku</id><content type="html" xml:base="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html">&lt;h2 id=&quot;getting-started&quot;&gt;Getting Started&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://theanzy.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://theanzy.github.io/blog/" rel="alternate" type="text/html" /><updated>2022-01-29T05:53:54+00:00</updated><id>https://theanzy.github.io/blog/feed.xml</id><title type="html">blog</title><subtitle>This page is created with Jekyll</subtitle><author><name>theanzy</name></author><entry><title type="html">Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action</title><link href="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html" rel="alternate" type="text/html" title="Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action" /><published>2021-05-13T16:08:30+00:00</published><updated>2022-01-29T05:50:22+00:00</updated><id>https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku</id><content type="html" xml:base="https://theanzy.github.io/blog/.net/core/2021/05/13/Deploy-AspNET-Core-MVC-to-docker-Heroku.html">&lt;h2 id=&quot;getting-started&quot;&gt;Getting Started&lt;/h2&gt;
+
 &lt;p&gt;We need to have a few things ready before we start:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Visual Studio 2019
+  &lt;li&gt;
+    &lt;p&gt;Visual Studio 2019&lt;/p&gt;
+
     &lt;ul&gt;
       &lt;li&gt;I am using the &lt;a href=&quot;https://visualstudio.microsoft.com/downloads/&quot;&gt;Community edition&lt;/a&gt; of Visual Studio 2019.&lt;/li&gt;
     &lt;/ul&gt;
@@ -19,7 +22,9 @@
   &lt;li&gt;
     &lt;p&gt;&lt;a href=&quot;https://devcenter.Heroku.com/articles/Heroku-cli&quot;&gt;Install Heroku cli&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;A GitHub repository for the project that we want to deploy&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A GitHub repository for the project that we want to deploy&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;setup-a-net-core-mvc-project-with-postgresql&quot;&gt;Setup a .NET Core MVC Project with PostgreSQL&lt;/h2&gt;
@@ -43,6 +48,7 @@ This step uses a local database. I will discuss how to get the app to work with 
     &lt;p&gt;In pgAdmin, create a new database and a new table.&lt;/p&gt;
 
     &lt;p&gt;In Visual Studio, install the following packages with Nuget package manager:&lt;/p&gt;
+
     &lt;ol&gt;
       &lt;li&gt;
         &lt;p&gt;Npgsql&lt;/p&gt;
@@ -62,12 +68,14 @@ This step uses a local database. I will discuss how to get the app to work with 
 
     &lt;p&gt;Replace the fields in the following snippet with your own credentials.&lt;/p&gt;
 
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; dotnet ef dbcontext scaffold &lt;span class=&quot;s2&quot;&gt;&quot;Host=localhost;Database=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;db;Username=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;user;Password=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;password&quot;&lt;/span&gt; Npgsql.EntityFrameworkCore.PostgreSQL &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; Models
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet ef dbcontext scaffold &lt;span class=&quot;s2&quot;&gt;&quot;Host=localhost;Database=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;db;Username=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;user;Password=demo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;password&quot;&lt;/span&gt; Npgsql.EntityFrameworkCore.PostgreSQL &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; Models
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
 
     &lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/57066856/dotnet-ef-not-found-in-net-core-3&quot;&gt;Install dotnet ef tool separately&lt;/a&gt;. If dotnet ef is not installed.&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;After that, you should have two classes generated in the project:
+  &lt;li&gt;
+    &lt;p&gt;After that, you should have two classes generated in the project:&lt;/p&gt;
+
     &lt;ul&gt;
       &lt;li&gt;Model class.&lt;/li&gt;
       &lt;li&gt;Context Class.
@@ -85,6 +93,7 @@ This step uses a local database. I will discuss how to get the app to work with 
     &lt;p&gt;You can choose to create create a new controller and a new view.&lt;/p&gt;
 
     &lt;p&gt;In the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Demo()&lt;/code&gt; method, add a new Razor View.&lt;/p&gt;
+
     &lt;ul&gt;
       &lt;li&gt;
         &lt;p&gt;Use the list template, and select your model class.&lt;/p&gt;
@@ -96,7 +105,7 @@ This step uses a local database. I will discuss how to get the app to work with 
 
     &lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ActionResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Demo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;IQueryable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DemoItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;items&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DemoItem&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;IQueryable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DemoItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;items&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DemoItem&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;orderby&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DemoItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToListAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;View&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
@@ -123,14 +132,19 @@ This step uses a local database. I will discuss how to get the app to work with 
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;You should see a list view similar to (Picture From: &lt;a href=&quot;https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/creating-an-entity-framework-data-model-for-an-asp-net-mvc-application&quot;&gt;Microsoft docs&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You should see a list view similar to (Picture From: &lt;a href=&quot;https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/creating-an-entity-framework-data-model-for-an-asp-net-mvc-application&quot;&gt;Microsoft docs&lt;/a&gt;)&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;&lt;img src=&quot;/blog/images/post/may21/mvc-list-view.png&quot; alt=&quot;_config.yml&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;setup-docker&quot;&gt;Setup Docker&lt;/h2&gt;
+
 &lt;ol&gt;
-  &lt;li&gt;Create a Dockerfile project folder. The following is the a snippet of my Dockerfile.
+  &lt;li&gt;
+    &lt;p&gt;Create a Dockerfile project folder. The following is the a snippet of my Dockerfile.&lt;/p&gt;
+
     &lt;div class=&quot;language-docker highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build-env&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
@@ -149,7 +163,7 @@ This step uses a local database. I will discuss how to get the app to work with 
 
 &lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; --from=build-env /app/out .&lt;/span&gt;
 
-&lt;span class=&quot;k&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; ASPNETCORE\_URLS=http://\*:$PORT dotnet DemoMVCApp.dll&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; ASPNETCORE_URLS=http://*:$PORT dotnet DemoMVCApp.dll&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;
@@ -161,28 +175,31 @@ This step uses a local database. I will discuss how to get the app to work with 
 
     &lt;p&gt;Compiles the project and gives a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{project-name}.dll&lt;/code&gt; file&lt;/p&gt;
 
-    &lt;pre&gt;&lt;code class=&quot;language-Docker&quot;&gt; RUN dotnet publish -c Release -o out
+    &lt;pre&gt;&lt;code class=&quot;language-Docker&quot;&gt;RUN dotnet publish -c Release -o out
 &lt;/code&gt;&lt;/pre&gt;
 
     &lt;p&gt;Download .NET core runtime to run the web app.&lt;/p&gt;
 
     &lt;p&gt;We will have to supply &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ASPNETCORE_URLS&lt;/code&gt; variable for it to be run on Heroku.&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;The web app needs to be using the port number provided in Heroku. In &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.cs&lt;/code&gt; modify your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateHostBuilder()&lt;/code&gt; method simillar to the following.
-    &lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IHostBuilder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateHostBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;li&gt;
+    &lt;p&gt;The web app needs to be using the port number provided in Heroku. In &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Program.cs&lt;/code&gt; modify your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CreateHostBuilder()&lt;/code&gt; method simillar to the following.&lt;/p&gt;
 
- &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateDefaultBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConfigureWebHostDefaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IHostBuilder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreateHostBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-     &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Environment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetEnvironmentVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateDefaultBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConfigureWebHostDefaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 
-     &lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseUrls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;http://+:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Environment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetEnvironmentVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-     &lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UseStartup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Startup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseUrls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;http://+:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
- &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;webBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UseStartup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Startup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;();&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
     &lt;p&gt;This will get the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ASPNETCORE_URLS&lt;/code&gt; variable passed in from the Dockerfile&lt;/p&gt;
 
     &lt;p&gt;We will need to change the listening port for the app. Otherwise, the web app will not start properly in Heroku because Heroku will use a different port than the usual port 5000 and 5001. See &lt;a href=&quot;https://habr.com/en/post/450904/&quot;&gt;Practicalities of deploying dockerized ASP.NET Core application to Heroku&lt;/a&gt;.&lt;/p&gt;
@@ -243,26 +260,19 @@ Heroku container:login
   &lt;li&gt;
     &lt;p&gt;In your GitHub repository, add three GitHub Secrets.&lt;/p&gt;
 
-    &lt;p&gt;We will use these values in GitHub actions workflow.&lt;/p&gt;
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;We will use these values in GitHub actions workflow.
 
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Heroku_APP_NAME&lt;/code&gt;
-        &lt;ul&gt;
-          &lt;li&gt;Name of your application&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DATABASE_URL&lt;/code&gt;
-        &lt;ul&gt;
-          &lt;li&gt;Find this value is in your Heroku app -&amp;gt; Settings -&amp;gt; Config Vars&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Heroku_API_KEY&lt;/code&gt;
-        &lt;ul&gt;
-          &lt;li&gt;Either reveal an existing api key or generate a new one in &lt;a href=&quot;https://dashboard.Heroku.com/account&quot;&gt;Heroku Account page&lt;/a&gt;.
-&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
+- `Heroku_APP_NAME`
+  - Name of your application
+
+- `DATABASE_URL`
+  - Find this value is in your Heroku app -&amp;gt; Settings -&amp;gt; Config Vars
+
+- `Heroku_API_KEY`
+  - Either reveal an existing api key or generate a new one in [Heroku Account page](https://dashboard.Heroku.com/account).
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Add a new GitHub workflow on the Github Actions tab in your GitHub repository. This will build and deploy the dockerized web app to Heroku whenever you push something new to GitHub.&lt;/p&gt;
@@ -335,4 +345,4 @@ Heroku container:login
   &lt;li&gt;
     &lt;p&gt;Make sure the web app also runs locally wih local PostgreSQL database.&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>theanzy</name></author><category term=".net" /><category term="core" /><summary type="html">Getting Started We need to have a few things ready before we start:</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>theanzy</name></author><category term=".net" /><category term="core" /><summary type="html">Getting Started</summary></entry></feed>
