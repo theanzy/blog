@@ -1,15 +1,16 @@
 ---
 layout: post
 title: Deploy ASP .NET Core MVC app with PostgreSQL to Heroku using GitHub Action
-date:   2021-05-14 00:08:30 +0800
+date: 2021-05-14 00:08:30 +0800
 categories: .net core
 ---
 
-
 ## Getting Started
+
 We need to have a few things ready before we start:
 
 1.  Visual Studio 2019
+
     - I am using the [Community edition](https://visualstudio.microsoft.com/downloads/) of Visual Studio 2019.
 
 2.  PostgreSQL
@@ -32,7 +33,6 @@ We need to have a few things ready before we start:
 
     After setting up the MVC project in Visual Studio, run the app to make sure it is working.
 
-
 2.  We will setup a PostgreSQL database with Entity Framework Core for our web app.
     This step uses a local database. I will discuss how to get the app to work with PostgreSQL in Heroku later in this post.
 
@@ -41,28 +41,30 @@ We need to have a few things ready before we start:
     In pgAdmin, create a new database and a new table.
 
     In Visual Studio, install the following packages with Nuget package manager:
+
     1.  Npgsql
 
     2.  Npgsql.EntityFrameworkCore.PostgreSQL
 
     3.  Microsoft.EntityFrameworkCore.Design
 
-3. Once we have a database and table, we will convert it to Models in C\#.
+3.  Once we have a database and table, we will convert it to Models in C\#.
 
-    In same directory as your project file, convert the database in PostgreSQL to Models. 
-    
+    In same directory as your project file, convert the database in PostgreSQL to Models.
+
     Replace the fields in the following snippet with your own credentials.
 
-    ``` bash
+    ```bash
     dotnet ef dbcontext scaffold "Host=localhost;Database=demo\_db;Username=demo\_user;Password=demo\_password" Npgsql.EntityFrameworkCore.PostgreSQL -o Models
     ```
 
     [Install dotnet ef tool separately](https://stackoverflow.com/questions/57066856/dotnet-ef-not-found-in-net-core-3). If dotnet ef is not installed.
 
 4.  After that, you should have two classes generated in the project:
+
     - Model class.
     - Context Class.
-        - This class is used to perform CRUD operations to our database.
+      - This class is used to perform CRUD operations to our database.
 
 5.  Display the database items in your web page.
 
@@ -71,14 +73,15 @@ We need to have a few things ready before we start:
     You can choose to create create a new controller and a new view.
 
     In the `Demo()` method, add a new Razor View.
-    -  Use the list template, and select your model class.
 
-    -  The following snippet is my `Demo()` controller method in `HomeController.cs`
+    - Use the list template, and select your model class.
 
-    ``` csharp
+    - The following snippet is my `Demo()` controller method in `HomeController.cs`
+
+    ```csharp
     public async Task<ActionResult> Demo()
     {
-        IQueryable<DemoItem> items = from item in context.DemoItem 
+        IQueryable<DemoItem> items = from item in context.DemoItem
         orderby item.Id select item;
         List<DemoItem> result = await items.ToListAsync();
         return View(result);
@@ -89,19 +92,21 @@ We need to have a few things ready before we start:
 
 6.  Build and run your app locally to see the result. I use the following link to view my page.
 
-    -  <https://localhost:44379/Home/Demo>
+    - <https://localhost:44379/Home/Demo>
 
-        -  `Home` is for `HomeController`
+      - `Home` is for `HomeController`
 
-        -  `Demo` is my `Demo()` method in `HomeController`
+      - `Demo` is my `Demo()` method in `HomeController`
 
 7.  You should see a list view similar to (Picture From: [Microsoft docs](https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/creating-an-entity-framework-data-model-for-an-asp-net-mvc-application))
 
 ![_config.yml]({{ site.baseurl }}/images/post/may21/mvc-list-view.png)
 
 ## Setup Docker
+
 1.  Create a Dockerfile project folder. The following is the a snippet of my Dockerfile.
-    ``` docker
+
+    ```docker
     FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build-env
 
     WORKDIR /app
@@ -120,10 +125,10 @@ We need to have a few things ready before we start:
 
     COPY --from=build-env /app/out .
 
-    CMD ASPNETCORE\_URLS=http://\*:$PORT dotnet DemoMVCApp.dll
+    CMD ASPNETCORE_URLS=http://*:$PORT dotnet DemoMVCApp.dll
     ```
 
-2. The Dockerfile will do the following steps:
+2.  The Dockerfile will do the following steps:
 
     Download .NET core 5.0 sdk to build the project.
 
@@ -131,7 +136,7 @@ We need to have a few things ready before we start:
 
     Compiles the project and gives a `{project-name}.dll` file
 
-    ``` Docker
+    ```Docker
     RUN dotnet publish -c Release -o out
     ```
 
@@ -139,8 +144,9 @@ We need to have a few things ready before we start:
 
     We will have to supply `ASPNETCORE_URLS` variable for it to be run on Heroku.
 
-3. The web app needs to be using the port number provided in Heroku. In `Program.cs` modify your `CreateHostBuilder()` method simillar to the following.
-    ``` csharp
+3.  The web app needs to be using the port number provided in Heroku. In `Program.cs` modify your `CreateHostBuilder()` method simillar to the following.
+
+    ```csharp
     public static IHostBuilder CreateHostBuilder(string[] args);
 
     Host.CreateDefaultBuilder(args)
@@ -155,6 +161,7 @@ We need to have a few things ready before we start:
 
     });
     ```
+
     This will get the `ASPNETCORE_URLS` variable passed in from the Dockerfile
 
     We will need to change the listening port for the app. Otherwise, the web app will not start properly in Heroku because Heroku will use a different port than the usual port 5000 and 5001. See [Practicalities of deploying dockerized ASP.NET Core application to Heroku](https://habr.com/en/post/450904/).
@@ -187,14 +194,14 @@ We need to have a few things ready before we start:
 
 4.  In a command prompt, login to Heroku cli.
 
-    ``` bash
+    ```bash
     Heroku login
     Heroku container:login
     ```
 
 5.  Configure Heroku to use containers
 
-    ``` bash
+    ```bash
     Heroku stack:set container
     ```
 
@@ -202,17 +209,19 @@ We need to have a few things ready before we start:
 
 1.  In your GitHub repository, add three GitHub Secrets.
 
-    We will use these values in GitHub actions workflow.
+        We will use these values in GitHub actions workflow.
 
-    - `Heroku_APP_NAME`
-      - Name of your application
+        - `Heroku_APP_NAME`
+          - Name of your application
 
-    - `DATABASE_URL`
-      - Find this value is in your Heroku app -> Settings -> Config Vars
+        - `DATABASE_URL`
+          - Find this value is in your Heroku app -> Settings -> Config Vars
 
-    - `Heroku_API_KEY`
-      - Either reveal an existing api key or generate a new one in [Heroku Account page](https://dashboard.Heroku.com/account).
-<br/><br/>
+        - `Heroku_API_KEY`
+          - Either reveal an existing api key or generate a new one in [Heroku Account page](https://dashboard.Heroku.com/account).
+
+    <br/><br/>
+
 2.  Add a new GitHub workflow on the Github Actions tab in your GitHub repository. This will build and deploy the dockerized web app to Heroku whenever you push something new to GitHub.
 
     ```yml
@@ -246,9 +255,9 @@ We need to have a few things ready before we start:
 
     We had supplied the enviroment variables in Dockerfile, now we need to modify the web app so that it will take in the variables in Heroku.
 
-    Modify `ConfigureServices()` in `Startup.cs` to use Heroku's connection string when the web app is not running in development enviroment.  
+    Modify `ConfigureServices()` in `Startup.cs` to use Heroku's connection string when the web app is not running in development enviroment.
 
-    ``` csharp
+    ```csharp
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
@@ -261,11 +270,11 @@ We need to have a few things ready before we start:
     }
     ```
 
-    Add in the `GetHeroConnectionString()` method. When the web app is deployed in Heroku, this `ConfigureServices()` will use the this method to convert the `DATABASE_URL` variable from Heroku to the connection string that is expected by the .NET Core web app. 
-    
+    Add in the `GetHeroConnectionString()` method. When the web app is deployed in Heroku, this `ConfigureServices()` will use the this method to convert the `DATABASE_URL` variable from Heroku to the connection string that is expected by the .NET Core web app.
+
     I modified the `GetHeroConnectionString()` function that I copied from this [post by @n1ghtmare](https://medium.com/@vapurrmaid/getting-started-with-Heroku-postgres-and-pgadmin-run-on-part-2-90d9499ed8fb).
 
-    ``` csharp
+    ```csharp
     private static string GetHerokuConnectionString()
     {
         string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
